@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">R.S Library</string>
+    <string name="app_tagline">Study • Focus • Succeed</string>
+    <string name="welcome_to_library">Welcome to R.S Library</string>
+    <string name="admin_panel_title">Admin / Owner Portal</string>
+    <string name="student_panel_title">Student Portal</string>
+</resources>

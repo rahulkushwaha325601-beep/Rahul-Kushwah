@@ -1,0 +1,115 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function isValidStudent(data) {
+      return data.keys().hasAll(['id', 'username', 'passwordHash', 'fullName', 'mobileNumber', 'seatNumber', 'course', 'status'])
+        && data.id is string && data.id.size() > 0 && data.id.size() <= 64
+        && data.username is string && data.username.size() >= 3 && data.username.size() <= 64
+        && data.passwordHash is string && data.passwordHash.size() > 0
+        && data.fullName is string && data.fullName.size() > 0 && data.fullName.size() <= 128
+        && data.mobileNumber is string && data.mobileNumber.size() >= 5 && data.mobileNumber.size() <= 20
+        && data.seatNumber is string && data.seatNumber.size() > 0 && data.seatNumber.size() <= 64
+        && data.course is string && data.course.size() > 0 && data.course.size() <= 128
+        && data.status in ['Active', 'Inactive']
+        && (!('email' in data) || data.email is string)
+        && (!('dob' in data) || data.dob is string)
+        && (!('address' in data) || data.address is string)
+        && (!('parentName' in data) || data.parentName is string)
+        && (!('joiningDate' in data) || data.joiningDate is string)
+        && (!('emergencyContact' in data) || data.emergencyContact is string)
+        && (!('aadhaarFrontBase64' in data) || data.aadhaarFrontBase64 == null || data.aadhaarFrontBase64 is string)
+        && (!('aadhaarBackBase64' in data) || data.aadhaarBackBase64 == null || data.aadhaarBackBase64 is string)
+        && (!('profileCompleted' in data) || data.profileCompleted is bool)
+        && (!('studentQrToken' in data) || data.studentQrToken is string)
+        && (!('createdAt' in data) || (data.createdAt is timestamp && data.createdAt <= request.time) || data.createdAt is int || data.createdAt is number)
+        && (!('updatedAt' in data) || (data.updatedAt is timestamp && data.updatedAt <= request.time) || data.updatedAt is int || data.updatedAt is number);
+    }
+
+    function isValidAttendance(data) {
+      return data.keys().hasAll(['studentId', 'studentName', 'date', 'checkInTime', 'status', 'method'])
+        && data.studentId is string && data.studentId.size() > 0 && data.studentId.size() <= 64
+        && data.studentName is string && data.studentName.size() > 0 && data.studentName.size() <= 128
+        && data.date is string && data.date.size() == 10
+        && data.checkInTime is string && data.checkInTime.size() > 0 && data.checkInTime.size() <= 32
+        && data.status in ['Present', 'Absent', 'Late']
+        && data.method in ['QR Scan', 'Manual']
+        && (!('checkOutTime' in data) || data.checkOutTime == null || data.checkOutTime is string)
+        && (!('remarks' in data) || data.remarks is string)
+        && (!('timestamp' in data) || data.timestamp is int || data.timestamp is number)
+        && (!('createdAt' in data) || (data.createdAt is timestamp && data.createdAt <= request.time) || data.createdAt is int || data.createdAt is number);
+    }
+
+    function isValidPayment(data) {
+      return data.keys().hasAll(['id', 'studentId', 'studentName', 'amount', 'date', 'time', 'status'])
+        && data.id is string && data.id.size() > 0
+        && data.studentId is string && data.studentId.size() > 0
+        && data.studentName is string && data.studentName.size() > 0
+        && (data.amount is number || data.amount is int)
+        && data.date is string && data.date.size() == 10
+        && data.time is string
+        && data.status in ['Pending', 'Verified', 'Rejected']
+        && (!('studentUsername' in data) || data.studentUsername is string)
+        && (!('transactionRef' in data) || data.transactionRef is string)
+        && (!('screenshotBase64' in data) || data.screenshotBase64 is string)
+        && (!('adminNote' in data) || data.adminNote is string)
+        && (!('verifiedAt' in data) || data.verifiedAt == null || data.verifiedAt is string)
+        && (!('createdAt' in data) || data.createdAt is int || data.createdAt is number);
+    }
+
+    function isValidSettings(data) {
+      return data.keys().hasAll(['libraryName', 'adminUsername', 'adminPasswordHash', 'officialQrToken', 'isQrActive'])
+        && data.libraryName is string && data.libraryName.size() > 0 && data.libraryName.size() <= 128
+        && data.adminUsername is string && data.adminUsername.size() > 0
+        && data.adminPasswordHash is string && data.adminPasswordHash.size() > 0
+        && data.officialQrToken is string && data.officialQrToken.size() > 0
+        && data.isQrActive is bool
+        && (!('tagline' in data) || data.tagline is string)
+        && (!('ownerName' in data) || data.ownerName is string)
+        && (!('contactPhone' in data) || data.contactPhone is string)
+        && (!('contactEmail' in data) || data.contactEmail is string)
+        && (!('address' in data) || data.address is string)
+        && (!('totalSeats' in data) || data.totalSeats is int || data.totalSeats is number)
+        && (!('openingTime' in data) || data.openingTime is string)
+        && (!('closingTime' in data) || data.closingTime is string)
+        && (!('qrGeneratedDate' in data) || data.qrGeneratedDate is string)
+        && (!('paytmQrCodeBase64' in data) || data.paytmQrCodeBase64 == null || data.paytmQrCodeBase64 is string)
+        && (!('monthlyFee' in data) || data.monthlyFee is int || data.monthlyFee is number)
+        && (!('upiId' in data) || data.upiId is string)
+        && (!('paymentInstructions' in data) || data.paymentInstructions is string)
+        && (!('updatedAt' in data) || (data.updatedAt is timestamp && data.updatedAt <= request.time) || data.updatedAt is int || data.updatedAt is number);
+    }
+
+    match /students/{studentId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated() && isValidStudent(request.resource.data);
+      allow delete: if isAuthenticated();
+    }
+
+    match /attendance/{attendanceId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated() && isValidAttendance(request.resource.data);
+      allow delete: if isAuthenticated();
+    }
+
+    match /payments/{paymentId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated() && isValidPayment(request.resource.data);
+      allow delete: if isAuthenticated();
+    }
+
+    match /settings/{settingId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated() && isValidSettings(request.resource.data);
+      allow delete: if isAuthenticated();
+    }
+  }
+}

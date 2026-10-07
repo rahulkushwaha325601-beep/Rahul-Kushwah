@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:translateX="18"
+        android:translateY="18"
+        android:scaleX="0.666"
+        android:scaleY="0.666">
+        <!-- Open book left page -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M18,32 C26,28 40,28 54,34 L54,82 C40,76 26,76 18,80 Z" />
+        <!-- Open book right page -->
+        <path
+            android:fillColor="#E2E8F0"
+            android:pathData="M90,32 C82,28 68,28 54,34 L54,82 C68,76 82,76 90,80 Z" />
+        <!-- Book spine line -->
+        <path
+            android:fillColor="#CBD5E1"
+            android:pathData="M52.5,33 L55.5,33 L55.5,83 L52.5,83 Z" />
+        <!-- Golden Ribbon Bookmark -->
+        <path
+            android:fillColor="#F59E0B"
+            android:pathData="M51,26 L57,26 L57,48 L54,44 L51,48 Z" />
+        <!-- Library Pillar / Lamp Emblem top star -->
+        <path
+            android:fillColor="#FBBF24"
+            android:pathData="M54,16 L56,21 L61,21 L57,24 L59,29 L54,26 L49,29 L51,24 L47,21 L52,21 Z" />
+        <!-- Page accent lines left -->
+        <path
+            android:fillColor="#94A3B8"
+            android:pathData="M26,44 L46,42 L46,45 L26,47 Z" />
+        <path
+            android:fillColor="#94A3B8"
+            android:pathData="M26,52 L46,50 L46,53 L26,55 Z" />
+        <path
+            android:fillColor="#94A3B8"
+            android:pathData="M26,60 L46,58 L46,61 L26,63 Z" />
+        <!-- Page accent lines right -->
+        <path
+            android:fillColor="#94A3B8"
+            android:pathData="M62,42 L82,44 L82,47 L62,45 Z" />
+        <path
+            android:fillColor="#94A3B8"
+            android:pathData="M62,50 L82,52 L82,55 L62,53 Z" />
+        <path
+            android:fillColor="#94A3B8"
+            android:pathData="M62,58 L82,60 L82,63 L62,61 Z" />
+    </group>
+</vector>

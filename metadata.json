@@ -1,0 +1,6 @@
+{
+  "name": "R.S Library",
+  "description": "Comprehensive Library Management and Attendance System for R.S Library with Admin and Student portals, QR attendance, and PDF reports.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

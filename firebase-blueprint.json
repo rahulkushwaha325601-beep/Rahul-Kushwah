@@ -1,0 +1,116 @@
+{
+  "entities": {
+    "Student": {
+      "title": "Student",
+      "description": "Registered library student account, profile, and verification documents",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique student registration ID, e.g. RSL-001" },
+        "username": { "type": "string", "description": "Individual student login username, e.g. student001" },
+        "passwordHash": { "type": "string", "description": "Salted SHA-256 password hash" },
+        "fullName": { "type": "string", "description": "Student full legal name" },
+        "parentName": { "type": "string", "description": "Father or mother name" },
+        "mobileNumber": { "type": "string", "description": "Contact mobile phone number" },
+        "email": { "type": "string", "description": "Email address" },
+        "dob": { "type": "string", "description": "Date of Birth YYYY-MM-DD" },
+        "address": { "type": "string", "description": "Residential address" },
+        "joiningDate": { "type": "string", "description": "Date of joining YYYY-MM-DD" },
+        "seatNumber": { "type": "string", "description": "Assigned library desk or seat number" },
+        "course": { "type": "string", "description": "Exam or course target, e.g. UPSC, SSC" },
+        "emergencyContact": { "type": "string", "description": "Emergency contact number" },
+        "aadhaarFrontBase64": { "type": "string", "description": "Compressed Base64 Aadhaar card front image" },
+        "aadhaarBackBase64": { "type": "string", "description": "Compressed Base64 Aadhaar card back image" },
+        "profileCompleted": { "type": "boolean", "description": "Whether student has completed mandatory profile verification" },
+        "status": { "type": "string", "enum": ["Active", "Inactive"], "description": "Account status" },
+        "studentQrToken": { "type": "string", "description": "Student personal badge QR token" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp via serverTimestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last update timestamp via serverTimestamp" }
+      },
+      "required": ["id", "username", "passwordHash", "fullName", "mobileNumber", "seatNumber", "course", "status"]
+    },
+    "Attendance": {
+      "title": "Attendance",
+      "description": "Daily student library attendance log marked via common reception QR or manual entry",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string", "description": "Reference to the student ID" },
+        "studentName": { "type": "string", "description": "Student full name at the time of check-in" },
+        "date": { "type": "string", "description": "Date of attendance in YYYY-MM-DD format" },
+        "checkInTime": { "type": "string", "description": "Formatted check-in time, e.g. 09:30 AM" },
+        "checkOutTime": { "type": "string", "description": "Optional check-out time" },
+        "status": { "type": "string", "enum": ["Present", "Absent", "Late"], "description": "Attendance status" },
+        "method": { "type": "string", "enum": ["QR Scan", "Manual"], "description": "Verification method used" },
+        "remarks": { "type": "string", "description": "Optional administrative remarks" },
+        "timestamp": { "type": "integer", "description": "Epoch timestamp in milliseconds" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp via serverTimestamp" }
+      },
+      "required": ["studentId", "studentName", "date", "checkInTime", "status", "method"]
+    },
+    "Payment": {
+      "title": "Payment",
+      "description": "Monthly fee payment submission with screenshot proof and verification status",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique payment record ID" },
+        "studentId": { "type": "string", "description": "Student ID who made the payment" },
+        "studentUsername": { "type": "string", "description": "Student username" },
+        "studentName": { "type": "string", "description": "Student name" },
+        "amount": { "type": "number", "description": "Payment amount paid in INR" },
+        "transactionRef": { "type": "string", "description": "UPI / UTR reference number" },
+        "screenshotBase64": { "type": "string", "description": "Compressed Base64 image of payment screenshot" },
+        "date": { "type": "string", "description": "Date of payment in YYYY-MM-DD format" },
+        "time": { "type": "string", "description": "Time of payment HH:mm format" },
+        "status": { "type": "string", "enum": ["Pending", "Verified", "Rejected"], "description": "Payment verification status" },
+        "adminNote": { "type": "string", "description": "Admin review remark or rejection reason" },
+        "verifiedAt": { "type": "string", "description": "Timestamp when admin verified payment" },
+        "createdAt": { "type": "integer", "description": "Creation epoch timestamp" }
+      },
+      "required": ["id", "studentId", "studentName", "amount", "date", "time", "status"]
+    },
+    "LibrarySettings": {
+      "title": "LibrarySettings",
+      "description": "Global R.S Library administrative configuration, Paytm QR, and official reception QR token",
+      "type": "object",
+      "properties": {
+        "libraryName": { "type": "string", "description": "Official name of the library" },
+        "tagline": { "type": "string", "description": "Library motto or subtitle" },
+        "ownerName": { "type": "string", "description": "Administrator / Owner name" },
+        "contactPhone": { "type": "string", "description": "Contact phone number" },
+        "contactEmail": { "type": "string", "description": "Contact email address" },
+        "address": { "type": "string", "description": "Physical address of the library" },
+        "totalSeats": { "type": "integer", "description": "Total library seat capacity" },
+        "adminUsername": { "type": "string", "description": "Master admin username Raman1998" },
+        "adminPasswordHash": { "type": "string", "description": "Salted hash for master admin credential" },
+        "officialQrToken": { "type": "string", "description": "Active official entrance QR token for all students" },
+        "isQrActive": { "type": "boolean", "description": "Whether the entrance QR is active" },
+        "qrGeneratedDate": { "type": "string", "description": "Date official QR was generated" },
+        "openingTime": { "type": "string", "description": "Daily opening time" },
+        "closingTime": { "type": "string", "description": "Daily closing time" },
+        "paytmQrCodeBase64": { "type": "string", "description": "Owner's Paytm QR Code image in Base64" },
+        "monthlyFee": { "type": "number", "description": "Configured monthly library fee in INR" },
+        "upiId": { "type": "string", "description": "Owner's UPI ID for direct payments" },
+        "paymentInstructions": { "type": "string", "description": "Payment guidance shown to students" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last updated timestamp via serverTimestamp" }
+      },
+      "required": ["libraryName", "adminUsername", "adminPasswordHash", "officialQrToken", "isQrActive"]
+    }
+  },
+  "firestore": {
+    "/students/{studentId}": {
+      "schema": { "$ref": "#/entities/Student" },
+      "description": "Collection of student accounts and profiles created and managed by the Admin"
+    },
+    "/attendance/{attendanceId}": {
+      "schema": { "$ref": "#/entities/Attendance" },
+      "description": "Collection of library attendance records marked by QR scan or manual entry"
+    },
+    "/payments/{paymentId}": {
+      "schema": { "$ref": "#/entities/Payment" },
+      "description": "Collection of student fee payment records with screenshots and verification status"
+    },
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/LibrarySettings" },
+      "description": "Global library configuration including Paytm QR and official entrance QR token"
+    }
+  }
+}
